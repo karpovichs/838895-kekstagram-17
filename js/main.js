@@ -67,3 +67,91 @@ for (var i = 0; i < PHOTO_COUNT; i++) {
 }
 
 pictures.appendChild(fragment);
+
+
+var photoInput = document.querySelector('#upload-file');
+var photoEdit = document.querySelector('.img-upload__overlay');
+var closeButton = photoEdit.querySelector('#upload-cancel');
+var preview = photoEdit.querySelector('.img-upload__preview');
+var effects = photoEdit.querySelectorAll('.effects__radio');
+var effectLevelPin = photoEdit.querySelector('.effect-level__pin ');
+var effectLevelValue = photoEdit.querySelector('.effect-level__value');
+
+function addEffect(effect) {
+  var classes = preview.classList;
+  classes.forEach(function (item) {
+    if (item !== 'img-upload__preview') {
+      preview.classList.remove(item);
+    }
+  });
+  var className = 'effects__preview--' + effect.value;
+  preview.classList.add(className);
+  preview.style = 'none';
+}
+
+function changeEffectLevel() {
+  if (preview.classList.contains('effects__preview--none')) {
+    preview.style.filter = 'none';
+  }
+  if (preview.classList.contains('effects__preview--chrome')) {
+    preview.style.filter = 'grayscale(' + (effectLevelValue.value / 100) + ')';
+  }
+  if (preview.classList.contains('effects__preview--sepia')) {
+    preview.style.filter = 'sepia(' + (effectLevelValue.value / 100) + ')';
+  }
+  if (preview.classList.contains('effects__preview--marvin')) {
+    preview.style.filter = 'invert(' + effectLevelValue.value + '%)';
+  }
+  if (preview.classList.contains('effects__preview--phobos')) {
+    preview.style.filter = 'blur(' + (effectLevelValue.value * 3 / 100) + 'px)';
+  }
+  if (preview.classList.contains('effects__preview--heat')) {
+    preview.style.filter = 'brightness(' + (effectLevelValue.value * 2 / 100 + 1) + ')';
+  }
+}
+
+function openEdit() {
+  photoEdit.classList.remove('hidden');
+  effects.forEach(function (effect) {
+    if (effect.checked) {
+      addEffect(effect);
+    }
+    effect.addEventListener('click', function () {
+      addEffect(effect);
+    });
+  });
+  changeEffectLevel();
+  effectLevelPin.addEventListener('mouseup', changeEffectLevel);
+  window.addEventListener('keydown', onEditEscPress);
+  closeButton.addEventListener('click', onCloseButtonClick);
+  closeButton.addEventListener('keydown', onCloseButtonEnterPress);
+}
+
+function closeEdit() {
+  photoEdit.classList.add('hidden');
+  window.removeEventListener('keydown', onEditEscPress);
+  closeButton.removeEventListener('click', onCloseButtonClick);
+  closeButton.removeEventListener('keydown', onCloseButtonEnterPress);
+}
+
+function onPhotoInputClick() {
+  openEdit();
+}
+
+function onEditEscPress(evt) {
+  if (evt.keyCode === 27) {
+    closeEdit();
+  }
+}
+
+function onCloseButtonClick() {
+  closeEdit();
+}
+
+function onCloseButtonEnterPress(evt) {
+  if (evt.keyCode === 13) {
+    closeEdit();
+  }
+}
+
+photoInput.addEventListener('change', onPhotoInputClick);

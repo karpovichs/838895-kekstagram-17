@@ -76,6 +76,8 @@ var preview = photoEdit.querySelector('.img-upload__preview');
 var effects = photoEdit.querySelectorAll('.effects__radio');
 var effectLevelPin = photoEdit.querySelector('.effect-level__pin ');
 var effectLevelValue = photoEdit.querySelector('.effect-level__value');
+var commentInput = photoEdit.querySelector('.text__description');
+var hashtagInput = photoEdit.querySelector('.text__hashtags');
 
 function addEffect(effect) {
   var classes = preview.classList;
@@ -140,7 +142,9 @@ function onPhotoInputClick() {
 
 function onEditEscPress(evt) {
   if (evt.keyCode === 27) {
-    closeEdit();
+    if (evt.target !== commentInput && evt.target !== hashtagInput) {
+      closeEdit();
+    }
   }
 }
 

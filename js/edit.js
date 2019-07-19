@@ -50,13 +50,41 @@
     window.effect.resetEffectLevel();
     effectLevelPin.removeEventListener('mousedown', window.effect.onPinMove);
 
-    // Убрать обработчик событий на сабмит
+    photoEdit.removeEventListener('submit', onFormSubmit);
 
     hashtagInput.removeEventListener('change', window.form.onHashtagInputValidation);
 
     window.removeEventListener('keydown', onEditEscPress);
     closeButton.removeEventListener('click', onCloseButtonClick);
     closeButton.removeEventListener('keydown', onCloseButtonEnterPress);
+  }
+
+  function onFormSubmit(evt) {
+    evt.preventDefault();
+
+    window.backend.save(new FormData(photoEdit), onSubmitSuccess, onSubmitError);
+  }
+
+  function onSubmitSuccess() {
+    closeEdit();
+    window.alerts.showSuccess();
+    photoEdit.reset();
+  }
+
+  function onTryAgainErrorButtonClick() {
+    window.alerts.hide();
+  }
+
+  function onReloadErrorButtonCLick() {
+    window.alerts.hide();
+    closeEdit();
+  }
+
+  function onSubmitError() {
+    window.alerts.showError();
+    var errorButtons = document.querySelectorAll('.error__button');
+    errorButtons[0].addEventListener('click', onTryAgainErrorButtonClick);
+    errorButtons[1].addEventListener('click', onReloadErrorButtonCLick);
   }
 
   window.edit = {
@@ -67,9 +95,7 @@
       window.effect.changeEffectLevel();
       effectLevelPin.addEventListener('mousedown', window.effect.onPinMove);
 
-      photoEdit.addEventListener('submit', function (evt) {
-        evt.preventDefault();
-      });
+      photoEdit.addEventListener('submit', onFormSubmit);
 
       hashtagInput.addEventListener('change', window.form.onHashtagInputValidation);
 

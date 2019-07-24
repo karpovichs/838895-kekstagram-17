@@ -1,13 +1,39 @@
 'use strict';
 
 (function () {
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
+  var photoInput = document.querySelector('#upload-file');
   var photoEdit = document.querySelector('.img-upload__form');
+  var photoPreview = photoEdit.querySelector('.img-upload__preview').querySelector('img');
+  var effectsPreview = photoEdit.querySelectorAll('.effects__preview');
   var photoOverlay = photoEdit.querySelector('.img-upload__overlay');
   var closeButton = photoEdit.querySelector('#upload-cancel');
   var effectLevelPin = photoEdit.querySelector('.effect-level__pin ');
   var effects = photoEdit.querySelectorAll('.effects__radio');
   var commentInput = photoEdit.querySelector('.text__description');
   var hashtagInput = photoEdit.querySelector('.text__hashtags');
+
+  function readAndPreview(file, image, type) {
+    var matches = FILE_TYPES.some(function (it) {
+      return file.name.toLowerCase().endsWith(it);
+    });
+    if (matches) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        if (type === 'effects') {
+          image.style = 'background-image: url(' + reader.result + ')';
+        } else {
+          image.src = reader.result;
+        }
+      });
+      reader.readAsDataURL(file);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   function onEditEscPress(evt) {
     window.utils.isEscEvent(evt, function () {
@@ -87,21 +113,33 @@
     errorButtons[1].addEventListener('click', onReloadErrorButtonCLick);
   }
 
-  window.edit = {
-    openEdit: function () {
-      photoOverlay.classList.remove('hidden');
+  function openEdit() {
+    photoOverlay.classList.remove('hidden');
 
-      addEffectsChange();
-      window.effect.changeEffectLevel();
-      effectLevelPin.addEventListener('mousedown', window.effect.onPinMove);
+    addEffectsChange();
+    window.effect.changeEffectLevel();
+    effectLevelPin.addEventListener('mousedown', window.effect.onPinMove);
 
-      photoEdit.addEventListener('submit', onFormSubmit);
+    photoEdit.addEventListener('submit', onFormSubmit);
 
-      hashtagInput.addEventListener('change', window.form.onHashtagInputValidation);
+    hashtagInput.addEventListener('change', window.form.onHashtagInputValidation);
 
-      window.addEventListener('keydown', onEditEscPress);
-      closeButton.addEventListener('click', onCloseButtonClick);
-      closeButton.addEventListener('keydown', onCloseButtonEnterPress);
-    }
-  };
+    window.addEventListener('keydown', onEditEscPress);
+    closeButton.addEventListener('click', onCloseButtonClick);
+    closeButton.addEventListener('keydown', onCloseButtonEnterPress);
+  }
+
+  function onPhotoInputClick() {
+    openEdit();
+  }
+
+  photoInput.addEventListener('change', function () {
+    var file = photoInput.files[0];
+    readAndPreview(file, photoPreview);
+    onPhotoInputClick();
+
+    effectsPreview.forEach(function (preview) {
+      readAndPreview(file, preview, 'effects');
+    });
+  });
 })();

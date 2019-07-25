@@ -13,6 +13,7 @@
   var effects = photoEdit.querySelectorAll('.effects__radio');
   var commentInput = photoEdit.querySelector('.text__description');
   var hashtagInput = photoEdit.querySelector('.text__hashtags');
+  var scaleButtons = photoEdit.querySelectorAll('.scale__control');
 
   function readAndPreview(file, image, type) {
     var matches = FILE_TYPES.some(function (it) {
@@ -136,10 +137,17 @@
   photoInput.addEventListener('change', function () {
     var file = photoInput.files[0];
     readAndPreview(file, photoPreview);
-    onPhotoInputClick();
 
     effectsPreview.forEach(function (preview) {
       readAndPreview(file, preview, 'effects');
     });
+
+    onPhotoInputClick();
+  });
+
+  scaleButtons.forEach(function (button) {
+    if (!button.classList.contains('scale__control--value')) {
+      button.addEventListener('click', window.effect.onScaleClick);
+    }
   });
 })();

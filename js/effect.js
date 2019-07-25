@@ -11,6 +11,7 @@
   var effectLevelValue = photoEdit.querySelector('.effect-level__value');
   var effectLevelDepth = photoEdit.querySelector('.effect-level__depth');
   var effectDefault = effectLevelPin.style.left;
+  var scaleValue = photoEdit.querySelector('.scale__control--value');
 
   function Coordinates(x) {
     this.x = x;
@@ -22,6 +23,20 @@
 
   function changeEffectLevelValue() {
     effectLevelValue.value = parseInt(effectLevelPin.style.left, 10);
+  }
+
+  function changeScale(evt) {
+    var valueNumber = parseInt(scaleValue.value, 10);
+
+    if ((valueNumber - 25) >= 25 && evt.target.classList.contains('scale__control--smaller')) {
+      scaleValue.value = valueNumber - 25 + '%';
+    }
+
+    if ((valueNumber + 25) <= 100 && evt.target.classList.contains('scale__control--bigger')) {
+      scaleValue.value = valueNumber + 25 + '%';
+    }
+
+    preview.querySelector('img').style.transform = 'scale(' + parseInt(scaleValue.value, 10) * 0.01 + ')';
   }
 
   window.effect = {
@@ -90,7 +105,11 @@
     resetEffectLevel: function () {
       effectLevelPin.style.left = effectDefault;
       effectLevelDepth.style.width = effectDefault;
+      preview.querySelector('img').style.transform = 'none';
       changeEffectLevelValue();
+    },
+    onScaleClick: function (evt) {
+      changeScale(evt);
     }
   };
 })();

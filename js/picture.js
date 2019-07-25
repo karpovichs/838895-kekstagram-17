@@ -70,16 +70,17 @@
       bigPicture.classList.add('hidden');
       loadMoreButton.removeEventListener('click', loadMore);
       bigPicture.querySelector('.social__comment-count').firstChild.textContent = '5 из ';
+      window.removeEventListener('keydown', onPictureEscPress);
+      closePictureButton.removeEventListener('click', onClosePictureClick);
     }
 
     function onClosePictureClick() {
       closePicture();
-      closePictureButton.removeEventListener('click', onClosePictureClick);
+
     }
 
     function onPictureEscPress(evt) {
       window.utils.isEscEvent(evt, closePicture);
-      window.removeEventListener('keydown', onPictureEscPress);
     }
   }
 

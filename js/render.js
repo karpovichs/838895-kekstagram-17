@@ -1,28 +1,50 @@
 'use strict';
 
 (function () {
-
   var pictures = document.querySelector('.pictures');
   var photoTemplate = document.querySelector('#picture').content.querySelector('.picture');
   var fragment = document.createDocumentFragment();
 
+  function Photo(data) {
+    this.url = data.url;
+    this.comments = data.comments;
+    this.likes = data.likes;
+    this.element = null;
+  }
 
-  function renderPhoto(photo) {
-    var photoElement = photoTemplate.cloneNode(true);
-    photoElement.querySelector('img').src = photo.url;
-    photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
-    photoElement.querySelector('.picture__likes').textContent = photo.likes;
+  Photo.prototype.create = function create() {
+    this.element = photoTemplate.cloneNode(true);
+    return this;
+  };
+
+  Photo.prototype.fill = function fill() {
+    this.element.querySelector('img').src = this.url;
+    this.element.querySelector('.picture__comments').textContent = this.comments.length;
+    this.element.querySelector('.picture__likes').textContent = this.likes;
+    return this;
+  };
+
+  function renderPhoto(data) {
+    var photo = new Photo(data);
+    photo.create()
+      .fill();
 
     function openPicture() {
-      window.picture.open(photo);
+      window.picture.open(data);
     }
 
     function onPhotoClick() {
       openPicture();
     }
 
-    photoElement.addEventListener('click', onPhotoClick);
-    return photoElement;
+    function onPhotoEnterPress(evt) {
+      window.utils.isEnterEvent(evt, openPicture);
+    }
+
+    photo.element.addEventListener('click', onPhotoClick);
+    photo.element.addEventListener('keydown', onPhotoEnterPress);
+
+    return photo.element;
   }
 
   window.render = {
@@ -30,7 +52,6 @@
       for (var i = 0; i < count; i++) {
         fragment.appendChild(renderPhoto(data[i]));
       }
-
       pictures.appendChild(fragment);
     },
     clearPhotoList: function () {

@@ -4,6 +4,7 @@
   var bigPicture = document.querySelector('.big-picture');
   var closePictureButton = bigPicture.querySelector('#picture-cancel');
   var loadMoreButton = bigPicture.querySelector('.comments-loader');
+  var body = document.querySelector('body');
 
   function userCommentsReset() {
     var userComments = bigPicture.querySelectorAll('.social__comment');
@@ -18,7 +19,7 @@
     var image = document.createElement('img');
     image.classList.add('social__picture');
     image.src = data.avatar;
-    image.alt = 'Аватар комментатора фотографии';
+    image.alt = data.name;
     image.width = '35';
     image.height = '35';
     var text = document.createElement('p');
@@ -52,10 +53,12 @@
     bigPicture.querySelector('.comments-count').textContent = photo.comments.length;
     loadMoreButton.addEventListener('click', loadMore);
 
+    body.classList.add('modal-open');
     bigPicture.classList.remove('hidden');
 
     window.addEventListener('keydown', onPictureEscPress);
     closePictureButton.addEventListener('click', onClosePictureClick);
+    closePictureButton.addEventListener('keydown', onCloseEnterPress);
 
     function loadMore() {
       commentsList = commentsList.slice(5);
@@ -67,16 +70,21 @@
     }
 
     function closePicture() {
+      body.classList.remove('modal-open');
       bigPicture.classList.add('hidden');
       loadMoreButton.removeEventListener('click', loadMore);
       bigPicture.querySelector('.social__comment-count').firstChild.textContent = '5 из ';
       window.removeEventListener('keydown', onPictureEscPress);
       closePictureButton.removeEventListener('click', onClosePictureClick);
+      closePictureButton.removeEventListener('keydown', onCloseEnterPress);
     }
 
     function onClosePictureClick() {
       closePicture();
+    }
 
+    function onCloseEnterPress(evt) {
+      window.utils.isEnterEvent(evt, closePicture);
     }
 
     function onPictureEscPress(evt) {

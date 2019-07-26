@@ -36,24 +36,6 @@
     }
   }
 
-  function onEditEscPress(evt) {
-    window.utils.isEscEvent(evt, function () {
-      if (evt.target !== commentInput && evt.target !== hashtagInput) {
-        closeEdit();
-      }
-    });
-  }
-
-  function onCloseButtonClick() {
-    closeEdit();
-  }
-
-  function onCloseButtonEnterPress(evt) {
-    window.utils.isEnterEvent(evt, function () {
-      closeEdit();
-    });
-  }
-
   function addEffectsChange() {
     effects.forEach(function (effect) {
       if (effect.checked) {
@@ -84,6 +66,24 @@
     window.removeEventListener('keydown', onEditEscPress);
     closeButton.removeEventListener('click', onCloseButtonClick);
     closeButton.removeEventListener('keydown', onCloseButtonEnterPress);
+  }
+
+  function onEditEscPress(evt) {
+    window.utils.isEscEvent(evt, function () {
+      if (evt.target !== commentInput && evt.target !== hashtagInput) {
+        closeEdit();
+      }
+    });
+  }
+
+  function onCloseButtonClick() {
+    closeEdit();
+  }
+
+  function onCloseButtonEnterPress(evt) {
+    window.utils.isEnterEvent(evt, function () {
+      closeEdit();
+    });
   }
 
   function onFormSubmit(evt) {

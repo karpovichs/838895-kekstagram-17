@@ -6,8 +6,8 @@
   var photoEdit = document.querySelector('.img-upload__form');
   var hashtagInput = photoEdit.querySelector('.text__hashtags');
 
-  function isHashtagRepeat(arr, input) {
-    var lowerCasedArr = arr.map(function (el) {
+  function isHashtagRepeat(array, input) {
+    var lowerCasedArr = array.map(function (el) {
       return el.toLowerCase();
     }).sort();
     for (var i = 0; i < lowerCasedArr.length; i++) {
@@ -21,8 +21,8 @@
   window.form = {
     onHashtagInputValidation: function () {
       hashtagInput.setCustomValidity('');
-      var hashtagArr = hashtagInput.value.split(' ').filter(function (e) {
-        return e;
+      var hashtagArr = hashtagInput.value.split(' ').filter(function (el) {
+        return el;
       });
 
       if (hashtagArr.length > MAX_HASHTAGS) {
@@ -50,6 +50,7 @@
           hashtagInput.setCustomValidity('Хэштеги долны разделяться пробелом, запятых быть не должно');
         }
       });
+
       isHashtagRepeat(hashtagArr, hashtagInput);
     }
   };

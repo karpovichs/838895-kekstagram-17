@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var SUCCESS_STATUS = 200;
   var URL_POST = 'https://js.dump.academy/kekstagram';
   var URL_GET = 'https://js.dump.academy/kekstagram/data';
   var TIMEOUT = 3000;
@@ -10,7 +11,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCCESS_STATUS) {
         onSuccess(xhr.response);
       } else {
         onError();

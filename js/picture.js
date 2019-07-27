@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var COMMENTS_QUANTITY = 5;
+
   var bigPicture = document.querySelector('.big-picture');
   var closePictureButton = bigPicture.querySelector('#picture-cancel');
   var loadMoreButton = bigPicture.querySelector('.comments-loader');
@@ -31,7 +33,7 @@
   }
 
   function renderComments(data) {
-    var takeNumber = data.length > 5 ? 5 : data.length;
+    var takeNumber = data.length > COMMENTS_QUANTITY ? COMMENTS_QUANTITY : data.length;
     for (var i = 0; i < takeNumber; i++) {
       setComment(data[i]);
     }
@@ -43,7 +45,7 @@
     renderComments(commentsList);
 
     loadMoreButton.classList.remove('hidden');
-    if (commentsList.length < 5) {
+    if (commentsList.length < COMMENTS_QUANTITY) {
       loadMoreButton.classList.add('hidden');
     }
 
@@ -61,8 +63,8 @@
     closePictureButton.addEventListener('keydown', onCloseEnterPress);
 
     function loadMore() {
-      commentsList = commentsList.slice(5);
-      if (commentsList.length < 5) {
+      commentsList = commentsList.slice(COMMENTS_QUANTITY);
+      if (commentsList.length < COMMENTS_QUANTITY) {
         loadMoreButton.classList.add('hidden');
       }
       renderComments(commentsList);
@@ -73,7 +75,7 @@
       body.classList.remove('modal-open');
       bigPicture.classList.add('hidden');
       loadMoreButton.removeEventListener('click', loadMore);
-      bigPicture.querySelector('.social__comment-count').firstChild.textContent = '5 из ';
+      bigPicture.querySelector('.social__comment-count').firstChild.textContent = COMMENTS_QUANTITY + ' из ';
       window.removeEventListener('keydown', onPictureEscPress);
       closePictureButton.removeEventListener('click', onClosePictureClick);
       closePictureButton.removeEventListener('keydown', onCloseEnterPress);
